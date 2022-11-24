@@ -114,7 +114,7 @@ $prod2=$_GET['IdProd2'];
     
               <!-- DÉBUT DU ROW -->
               <?php
-                $query = "SELECT * FROM produit WHERE IdProd=$prod1 OR IdProd=$prod2";
+                $query = "SELECT * FROM produit WHERE IdProd=$prod1 UNION SELECT * FROM produit WHERE IdProd=$prod2";
                 $query_run = $conn->query($query);
                 
                 $arr=array();

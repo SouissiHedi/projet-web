@@ -134,7 +134,7 @@ require'../config.php';
                   for($j=0;$j<$endrow;$j++){
                 ?>
                 <div class="col-lg-3 col-sm-1">
-                  <form action="confechan.php?IdProd1=<?= $arr[$i*4+$j]["IdProd"]; ?>&IdProd2=<?= $_GET["IdProd"]; ?>" method="post">
+                  <form action="confechan.php?IdProd1=<?=$_GET["IdProd"];?>&IdProd2=<?=$arr[$i*4+$j]["IdProd"];?>" method="post">
                     <div class="card element box">
                       <!-- Image -->
                       <div class="card-image"><img class="fiximg" src='data:image/png;base64,<?=base64_encode($arr[$i*4+$j]['lienImg'])?>' alt="Responsive image"></div>
