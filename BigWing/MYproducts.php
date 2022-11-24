@@ -1,3 +1,7 @@
+<?php
+require'../config.php';
+?>
+
 <!DOCTYPE html><html><head><meta charset="utf-8"/>
 
   
@@ -83,7 +87,7 @@
     <section class="products_section layout_padding">
       <div class="container products_heading">
         <h2>
-         Produits Disponibles
+         Mes Produits
         </h2>
       </div>
 
@@ -92,14 +96,46 @@
     
         </div>
         <div class="tab-pane fade active show" id="pills-products" role="tabpanel" aria-labelledby="pills-products-tab">
-    
+          <section class="info_section layout_padding2-bottom">
+            <div class=" container info_content">
+              <div class="form_container">
+                <button style="margin-left: 27.5em;">
+                  <a href="addform.php">Add an Article</a>
+                </button>
+              </div>
+            </div>
+          </section>
             <!-- DÉBUT CONTAINER -->
             <div class="container">
     
               <!-- DÉBUT DU ROW -->
+              <?php
+                $query = "SELECT * FROM produit";
+                $query_run = $conn->query($query);
+                
+                $query_count = "SELECT COUNT(*) FROM produit";
+                $res = $conn->query($query_count);
+                $row = $res->fetchColumn();
+
+                if ($row){
+                  $affrow = floor($row/4)+1;
+                  $arr=array();
+                  foreach ($query_run as $produit){
+                    $arr[]=$produit;
+                  }
+                  for($i=0;$i<$affrow;$i++){
+              ?>
               <div class="row" style="padding-top: 2rem">
     
                 <!-- PREMIER ARTICLE -->
+                <?php
+                  if($i==$affrow-1){
+                    $endrow= (($row/4) - floor($row/4)) * 4;
+                  } else {
+                    $endrow=4;
+                  }
+                  for($j=0;$j<$endrow;$j++){
+                ?>
                 <div class="col-lg-3 col-sm-1">
                   <div class="card element box">
                     <!-- Image -->
@@ -110,88 +146,26 @@
                       <div class="card-title">
                         <!-- Popover pour la description sur le titre du jeu -->
                         <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          Anker Soundcore FLARE 2
+                          <?=$arr[$i*4+$j]['NomProduit'];?>
                         </button>
                       </div>
                       <!-- Description du jeu -->
                       <div class="card-excerpt">
-                        <p></p>
+                        <p><?=$arr[$i*4+$j]['Description'];?></p>
                       </div>
                       <button name="prod1" class="Bbutton add-to-basket">Choisir le Produit</button>
                     </div>
                     <!-- Fin du corp -->
                   </div>
                 </div>
-    
-                <!-- DEUXIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod2.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          XIAOMI Redmi A1
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod2" class="Bbutton add-to-basket">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
-    
-                <!-- TROISIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod3.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          STAR ONE Four Électrique
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod3" class="Bbutton add-to-basket">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
-    
-                <!-- QUATRIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod1.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="Abutton" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          Anker Soundcore FLARE 2
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod4" class="Bbutton">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
+                <?php
+                  }
+                ?>
               </div>
+              <?php
+                  }
+                }
+              ?>
               <!-- FIN DU ROW -->
               
             </div>
@@ -447,6 +421,5 @@
   
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
-    <script type="text/javascript" src="assets/javascript/script.js"></script>
  
   </body></html>

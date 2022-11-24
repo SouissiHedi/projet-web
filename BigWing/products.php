@@ -1,3 +1,7 @@
+<?php
+require'../config.php';
+?>
+
 <!DOCTYPE html><html><head><meta charset="utf-8"/>
 
   
@@ -67,7 +71,7 @@
                       </li>
                     </ul>
                     <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-                      <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
+                      <button class="btn  my-2 my-sm-0 nav_search-btn"  type="button"  onclick="change()"></button>
                     </form>
                   </div>
                 </div>
@@ -77,6 +81,73 @@
         </div>
       </header>
       <!-- end header section -->
+    </div>
+    
+    <div id="searchform" hidden>
+      <div  style="box-shadow: 0px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);">
+          <br>
+          <h4 style="margin-left:10%">Appliquer les paramètres de recherche :</h4>
+          <br>
+          <div class="container">
+            <?php
+              $srchprod =$srchdesc= "";
+              $srchtype = "-Toutes les Catégories-";
+
+              if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                if (!empty($_POST["srchprod"])) {
+                  $srchprod = test_input($_POST["srchprod"]);
+                }
+                
+                if (!empty($_POST["srchtype"])) {
+                  $srchtype = test_input($_POST["srchtype"]);
+                }
+                  
+                if (!empty($_POST["srchdesc"])) {
+                  $srchdesc = test_input($_POST["srchdesc"]);
+                }
+              }
+
+              function test_input($data) {
+                $data = trim($data);
+                $data = stripslashes($data);
+                $data = htmlspecialchars($data);
+                return $data;
+              }
+            ?>
+            <form  action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post" >
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="srchprod">Nom du Produit</label>
+                  <input type="text" class="form-control" id="srchprod" name="srchprod" value="<?php echo $srchprod;?>"/>
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="srchtype">Selectionner le type de produit</label>
+                  <select id="srchtype" name="srchtype" class="form-control">
+                    <option selected><?php echo $srchtype;?></option>
+                    <option value='Téléphone et Tablette'>Téléphone & Tablette</option>
+                    <option value='Cuisine et Électroménager'>Cuisine & Électroménager</option>
+                    <option value='Mode et Vêtements'>Mode et Vêtements</option>
+                    <option value='Maison et Bureau'>Maison & Bureau</option>
+                    <option value='Jeux vidéos et Consoles'>Jeux vidéos & Consoles</option>
+                    <option>-Toutes les Catégories-</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="form-group">
+                <label for="srchdesc">Description</label>
+                <input type="text" class="form-control" id="srchdesc" name="srchdesc" placeholder="" value="<?php echo $srchdesc;?>"/>
+              </div>
+              </div>
+
+                <div class="d-flex justify-content-center">
+                  <button type="submit" class="">Appliquer</button>
+                </div>
+            </form>
+          <br>
+          </div>
+
+      </div>
     </div>
   
     <!-- contact section -->
@@ -97,101 +168,145 @@
             <div class="container">
     
               <!-- DÉBUT DU ROW -->
+              <?php
+                if($srchtype=="-Toutes les Catégories-"){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%'";
+                  }else{
+                    $query = "SELECT * FROM produit";
+                    $query_count = "SELECT COUNT(*) FROM produit";
+                  }
+                }elseif($srchtype=='Cuisine et Électroménager'){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Cuisine & Électroménager'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Cuisine & Électroménager'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Cuisine & Électroménager'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Cuisine & Électroménager'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Cuisine & Électroménager'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Cuisine & Électroménager'";
+                  }else{
+                    $query = "SELECT * FROM produit WHERE Type='Cuisine & Électroménager'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Cuisine & Électroménager'";
+                  }
+                }elseif($srchtype=='Téléphone et Tablette'){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Téléphone & Tablette'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Téléphone & Tablette'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Téléphone & Tablette'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Téléphone & Tablette'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Téléphone & Tablette'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Téléphone & Tablette'";
+                  }else{
+                    $query = "SELECT * FROM produit WHERE Type='Téléphone & Tablette'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Téléphone & Tablette'";
+                  }
+                }elseif($srchtype=='Mode et Vêtements'){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode et Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode et Vêtements'";
+                  }else{
+                    $query = "SELECT * FROM produit WHERE Type='Mode et Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Mode et Vêtements'";
+                  }
+                }elseif($srchtype=='Maison et Bureau'){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Maison & Bureau'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Maison & Bureau'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Maison & Bureau'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Maison & Bureau'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Maison & Bureau'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Maison & Bureau'";
+                  }else{
+                    $query = "SELECT * FROM produit WHERE Type='Maison & Bureau'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Maison & Bureau'";
+                  }
+                }elseif($srchtype=='Jeux vidéos et Consoles'){
+                  if ( $srchprod!="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type LIKE '%vid%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type LIKE '%vid%'";
+                  }elseif($srchprod!="" and $srchdesc==""){
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type LIKE '%vid%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type LIKE '%vid%'";
+                  }elseif($srchprod=="" and $srchdesc!=""){
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type LIKE '%vid%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type LIKE '%vid%'";
+                  }else{
+                    $query = "SELECT * FROM produit WHERE Type LIKE '%vid%'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type LIKE '%vid%'";
+                  }
+                }
+                $query_run = $conn->query($query);
+                $res = $conn->query($query_count);
+                $row = $res->fetchColumn();
+
+                if ($row){
+                  $affrow = floor($row/4)+1;
+                  $arr=array();
+                  foreach ($query_run as $produit){
+                    $arr[]=$produit;
+                  }
+                  for($i=0;$i<$affrow;$i++){
+              ?>
               <div class="row" style="padding-top: 2rem">
     
                 <!-- PREMIER ARTICLE -->
+                <?php
+                  if($i==$affrow-1){
+                    $endrow= (($row/4) - floor($row/4)) * 4;
+                  } else {
+                    $endrow=4;
+                  }
+                  for($j=0;$j<$endrow;$j++){
+                ?>
                 <div class="col-lg-3 col-sm-1">
                   <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod1.jpg" alt="Responsive image"></div>
+                      <!-- Image -->
+                    <div class="card-image"><img class="fiximg" src='data:image/png;base64,<?=base64_encode($arr[$i*4+$j]['lienImg'])?>' alt="Responsive image"></div>
                     <!-- Corp de notre carte -->
                     <div class="card-body">
                       <!-- Titre du jeu -->
                       <div class="card-title">
                         <!-- Popover pour la description sur le titre du jeu -->
                         <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          Anker Soundcore FLARE 2
+                          <?=$arr[$i*4+$j]['NomProduit'];?>
                         </button>
                       </div>
                       <!-- Description du jeu -->
                       <div class="card-excerpt">
-                        <p></p>
+                        <p><?=$arr[$i*4+$j]['Description'];?></p>
                       </div>
                       <button name="prod1" class="Bbutton add-to-basket">Choisir le Produit</button>
                     </div>
                     <!-- Fin du corp -->
                   </div>
                 </div>
-    
-                <!-- DEUXIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod2.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          XIAOMI Redmi A1
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod2" class="Bbutton add-to-basket">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
-    
-                <!-- TROISIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod3.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="button" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          STAR ONE Four Électrique
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod3" class="Bbutton add-to-basket">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
-    
-                <!-- QUATRIÈME JEU -->
-                <div class="col-lg-3 col-sm-1">
-                  <div class="card element box">
-                    <!-- Image -->
-                    <div class="card-image"><img class="fiximg" src="images/prod1.jpg"></div>
-                    <!-- Corp de notre carte -->
-                    <div class="card-body">
-                      <!-- Titre du jeu -->
-                      <div class="card-title">
-                        <!-- Popover pour la description sur le titre du jeu -->
-                        <button type="Abutton" class="Abutton Abutton:hover" data-container="body" data-toggle="popover" data-trigger="focus" data-placement="top" data-content="contact owner for more details">
-                          Anker Soundcore FLARE 2
-                        </button>
-                      </div>
-                      <!-- Description du jeu -->
-                      <div class="card-excerpt"><p></p>
-                      </div>
-                      <button  name="prod4" class="Bbutton">Choisir le Produit</button>
-                    </div>
-                    <!-- Fin du corp -->
-                  </div>
-                </div>
+                <?php
+                  }
+                ?>
               </div>
+              <?php
+                  }
+                }
+              ?>
               <!-- FIN DU ROW -->
               
             </div>
@@ -447,6 +562,6 @@
   
     <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.js"></script>
-    <script type="text/javascript" src="assets/javascript/script.js"></script>
+    <script type="text/javascript" src="js/search.js"></script>
  
   </body></html>
