@@ -256,6 +256,71 @@ require'config.php';
                             </table>
                         </div>
                     </div>
+
+                    <div class="col-12">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <div style="display: flex;">
+                                <div style="flex: 50%;"><h6 class="mb-4">table des produits</h6></div>
+                                <div style="flex: 50%;margin-left: 69%;"><a href="BigWing/addform.php"  class="btn btn-success btn-sm">Add</a></div>   
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">IdEX</th>
+                                        <th scope="col">IdProd1</th>
+                                        <th scope="col">IdProd2</th>
+                                        <th> Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php
+                                        $query2 = "SELECT * FROM echange";
+                                        $query_count2 = "SELECT COUNT(*) FROM echange";
+                                        $query_run2 = $conn->prepare($query2);
+                                        $query_run2->execute();
+                                        $res2 = $conn->query($query_count2);
+                                        $count2 = $res2->fetchColumn();
+                                        $data2 = $query_run2->fetchAll(PDO::FETCH_ASSOC);
+                                        if($count2>0)
+                                        {
+                                            foreach ($data2 as $produit2) 
+                                            {
+                                               ?>
+                                               <tr>
+                                                <td><?= $produit2['IdEX'];?></td>
+                                                <td><?= $produit2['IdProd1'];?></td>
+                                                <td><?= $produit2['IdProd2'];?></td>
+                                                <td>
+                                                   
+                                                    <a href="" name ="update" class="btn btn-success btn-sm">Update</a>
+                                                    
+                                                    <form action="" method="POST" class="d-inline">
+                                                        <button type="submit" name="delete-produit" value="" class="btn btn-danger btn-sm">Delete</button>
+
+                                                    </form>
+                                                    <a href="" name ="update" class="btn btn-warning btn-sm">Evaluate</a>
+                                                </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                                    ?>
+                                                    <tr>
+                                                        <td><?=$count2;?></td>
+                                                    </tr>
+                                                    <?php
+                                            
+                                        }
+                                        else
+                                        {
+                                             echo"<h5>no record found</h5>";   
+                                        }
+                                    ?>
+                                    
+                                   
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                      
                     <div class="col-sm-12 col-xl-6">
                         <div class="bg-secondary rounded h-100 p-4">

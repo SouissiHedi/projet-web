@@ -126,7 +126,7 @@ require'../config.php';
                     <option selected><?php echo $srchtype;?></option>
                     <option value='Téléphone et Tablette'>Téléphone & Tablette</option>
                     <option value='Cuisine et Électroménager'>Cuisine & Électroménager</option>
-                    <option value='Mode et Vêtements'>Mode et Vêtements</option>
+                    <option value='Mode et Vêtements'>Mode & Vêtements</option>
                     <option value='Maison et Bureau'>Maison & Bureau</option>
                     <option value='Jeux vidéos et Consoles'>Jeux vidéos & Consoles</option>
                     <option>-Toutes les Catégories-</option>
@@ -213,17 +213,17 @@ require'../config.php';
                   }
                 }elseif($srchtype=='Mode et Vêtements'){
                   if ( $srchprod!="" and $srchdesc!=""){
-                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
-                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode & Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND NomProduit LIKE '%$srchprod%' AND Type='Mode & Vêtements'";
                   }elseif($srchprod!="" and $srchdesc==""){
-                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
-                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode et Vêtements'";
+                    $query = "SELECT * FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode & Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE NomProduit LIKE '%$srchprod%' AND Type='Mode & Vêtements'";
                   }elseif($srchprod=="" and $srchdesc!=""){
-                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode et Vêtements'";
-                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode et Vêtements'";
+                    $query = "SELECT * FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode & Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Description LIKE '%$srchdesc%' AND Type='Mode & Vêtements'";
                   }else{
-                    $query = "SELECT * FROM produit WHERE Type='Mode et Vêtements'";
-                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Mode et Vêtements'";
+                    $query = "SELECT * FROM produit WHERE Type='Mode & Vêtements'";
+                    $query_count = "SELECT COUNT(*) FROM produit WHERE Type='Mode & Vêtements'";
                   }
                 }elseif($srchtype=='Maison et Bureau'){
                   if ( $srchprod!="" and $srchdesc!=""){

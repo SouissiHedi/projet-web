@@ -127,7 +127,7 @@ require'config.php';
               <option selected><?=$produit['Type'];?></option>
               <option>Téléphone & Tablette</option>
               <option>Cuisine & Électroménager</option>
-              <option>Mode et Vêtements</option>
+              <option>Mode & Vêtements</option>
               <option>Maison & Bureau</option>
               <option>Jeux vidéos & Consoles</option>
             </select>
